@@ -1,38 +1,33 @@
-﻿# The script of the game goes in this file.
-
-# Declare characters used by this game. The color argument colorizes the
-# name of the character.
-
-define e = Character("Eileen")
-
-init python:
+﻿init python:
 
     import main
 
-# The game starts here.
+define author = Character("nullqwertyuiop")
 
 label start:
 
-    $ main.mimic_run()
+    # Always reload main modules
 
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
+    python:
+
+        import importlib
+        import sys
+
+        for __sys_module in sys.modules.copy():
+            if (
+                __sys_module == "main"
+                or __sys_module.startswith("main.")
+                or __sys_module.startswith("game.main.")
+            ):
+                importlib.reload(sys.modules[__sys_module])
+
+        main.rpy_store.cleanup()
+        main.mimic_run()
 
     scene bg room
 
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
+    author "It seems you have reached the end of RenpyGPT"
 
-    show eileen happy
-
-    # These display lines of dialogue.
-
-    e "You've created a new Ren'Py game."
-
-    e "Once you add a story, pictures, and music, you can release it to the world!"
-
-    # This ends the game.
+    author "Feel free to restart a new session."
 
     return
